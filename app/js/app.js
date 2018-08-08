@@ -47,14 +47,12 @@ const splitAmount = function() {
                 receipt : Promise.delay(5000).then(tryAgain));
             return tryAgain();
         }).then(receipt => {
-            if (receipt.logs.length == 0) {
+            if (parseInt(receipt.status) != 1) {
                 console.error("Wrong status");
                 console.error(receipt);
-                console.error(receipt.logs);
                 $("#status").html("There was an error in the tx execution, status not 1");
             } else {
                 // Format the event nicely.
-                console.log(deployed.Transfer().formatter(receipt.logs[0]).args);
                 $("#status").html("Transfer executed");
             }
             // Make sure we update the UI.
@@ -62,6 +60,8 @@ const splitAmount = function() {
         }).then(balance => {
             balance = web3.fromWei(balance, "ether");
             $("#balance").html(balance.toString(10));
+            $("#split-funds").attr("disabled",false);
+            $("#withdraw-funds").attr("disabled",false);
             return instance.getBalance(window.account);
         }).catch(e => {
             $("#status").html(e.toString());
@@ -89,12 +89,12 @@ const withdraw = function() {
                 receipt : Promise.delay(1000).then(tryAgain));
             return tryAgain();
         }).then(receipt => {
-            if (receipt.logs.length == 0) {
-                console.error("Empty logs");
+            if (parseInt(receipt.status) != 1) {
+                console.error("Wrong status");
                 console.error(receipt);
-                $("#status").html("There was an error in the tx execution");
+                $("#status").html("There was an error in the tx execution, status not 1");
             } else {
-                // Format the event nicely
+                // Format the event nicely.
                 $("#status").html("Transfer executed");
             }
             // Make sure we update the UI.
@@ -102,6 +102,8 @@ const withdraw = function() {
         }).then(balance => {
             balance = web3.fromWei(balance, "ether");
             $("#balance").html(balance.toString(10));
+            $("#split-funds").attr("disabled",false);
+            $("#withdraw-funds").attr("disabled",false);
             return instance.getBalance(window.account);
         }).catch(e => {
             $("#status").html(e.toString());
