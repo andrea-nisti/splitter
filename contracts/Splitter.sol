@@ -6,7 +6,6 @@ contract
 Splitter {
 
 	mapping (address => uint) public  amounts;
-	
 	address public _owner;
 
 	
@@ -53,6 +52,9 @@ Splitter {
 		msg.sender.transfer(amount);
 		return true;
 
+	}
+	function getBalance(address addr) public view returns(uint) {
+		return amounts[addr];
 	}
 
 }
