@@ -44,7 +44,7 @@ const splitAmount = function() {
         }).then(txHash => {
 		$("#status").html("Transaction on the way " + txHash);
             const tryAgain = () => web3.eth.getTransactionReceiptPromise(txHash).then(receipt => receipt !== null ?
-                receipt : Promise.delay(1000).then(tryAgain));
+                receipt : Promise.delay(5000).then(tryAgain));
             return tryAgain();
         }).then(receipt => {
             if (receipt.logs.length == 0) {
@@ -63,12 +63,7 @@ const splitAmount = function() {
             balance = web3.fromWei(balance, "ether");
             $("#balance").html(balance.toString(10));
             return instance.getBalance(window.account);
-        }).then(balance => {
-            balance = web3.fromWei(balance, "ether");
-            $("#split-funds").attr("disabled",false);
-            $("#withdraw-funds").attr("disabled",false);
-        })
-        .catch(e => {
+        }).catch(e => {
             $("#status").html(e.toString());
             console.error(e);
             $("#split-funds").attr("disabled",false);
@@ -108,12 +103,7 @@ const withdraw = function() {
             balance = web3.fromWei(balance, "ether");
             $("#balance").html(balance.toString(10));
             return instance.getBalance(window.account);
-        }).then(balance => {
-            balance = web3.fromWei(balance, "ether");
-            $("#split-funds").attr("disabled",false);
-            $("#withdraw-funds").attr("disabled",false);
-        })
-        .catch(e => {
+        }).catch(e => {
             $("#status").html(e.toString());
             console.error(e);
             $("#split-funds").attr("disabled",false);
@@ -137,13 +127,14 @@ window.addEventListener('load', function() {
         .then(network => {
             console.log("Network:", network.toString(10));
             
-            return Splitter.deployed();
+            //return Splitter.deployed();
+            return web3.eth.getBalancePromise(window.account);
         })
-        .then(deployed => deployed.getBalance.call(window.account)) 
+        //.then(deployed => deployed.getBalance.call(window.account)) 
         // Notice how the conversion to a string is done at the very last moment.
-	    .then(balance => { //balance = web3.fromWei(balance, "ether");
+	    .then(balance => { balance = web3.fromWei(balance, "ether");
                            $("#balance").html(balance.toString(10));
-                        })
+        })
         // add buttons listener here below
         // We wire it when the system looks in order.
         .then(() => $("#split-funds").click(splitAmount))
