@@ -2,6 +2,11 @@
 *.sublime-project
 *.sublime-workspace
 
-#Builds
+#Node tuff
+/node*
 
+#Builds
 /build
+
+#Linux
+*~
