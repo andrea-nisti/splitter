@@ -53,8 +53,4 @@ Splitter {
 		return true;
 
 	}
-	function getBalance(address addr) public view returns(uint) {
-		return amounts[addr];
-	}
-
 }
